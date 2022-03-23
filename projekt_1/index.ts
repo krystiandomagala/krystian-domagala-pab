@@ -3,7 +3,6 @@ const app = express()
 app.get('/', function (req, res) {  
   res.send('Hello World')  
 })  
-app.listen(3000) 
 
 app.get('/:operator/:num1/:num2', function (req, res) {
   
@@ -22,3 +21,5 @@ app.get('/:operator/:num1/:num2', function (req, res) {
   else
     res.send('Niepoprawna komenda!')
 });
+
+app.listen(3000) 
