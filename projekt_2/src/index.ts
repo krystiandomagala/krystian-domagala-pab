@@ -1,4 +1,3 @@
-//jeśli instaluje u siebie na omputerz, zainstaluj nodemon i ts-node globalnie (-g)
 import express from 'express'
 import {Request, Response} from 'express'
 import { json } from 'stream/consumers'
@@ -82,5 +81,3 @@ app.post('/note', function (req: Request, res: Response) {
 })
 
 app.listen(3000)
-
-
