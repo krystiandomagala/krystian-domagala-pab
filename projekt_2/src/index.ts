@@ -1,8 +1,10 @@
 import express from 'express'
 import {Request, Response} from 'express'
 import { json } from 'stream/consumers'
+import { createLogicalNot } from 'typescript'
 import {Note} from './note'
 import {Tag} from './tag'
+import {Login} from './login'
 
 const app = express()
 
@@ -62,8 +64,7 @@ app.post('/note', function (req: Request, res: Response) {
   {
     console.log(req.body) 
 
-    let note: Note = new Note(req.body.title, req.body.content, req.body.tags);
-    tags.push(tag);
+    let note: Note = new Note(req.body.title, req.body.content);
     notes.push(note);
     res.status(201).send(note.id.toString());
   }
@@ -128,4 +129,25 @@ app.post('/tag', function (req: Request, res: Response) {
   
 })
 
+/*---------------------Login-----------------------------*/
+
+import {jwt} from 'jsonwebtoken'
+
+const logins: Array<Login> = new Array();
+
+app.post('/login', function (req: Request, res: Response) {
+
+    let secret = process.env.JWT_SECRET_KEY;
+
+    const payload = jwt.verify(token, secret)
+    const token = jwt.sign(payload, secret)
+
+    let login: Login = new Login(req.body.login, req.body.password);
+    logins.push(login);
+    
+    res.status(200).send(login.login);  
+})
+
+
 app.listen(3000)
+

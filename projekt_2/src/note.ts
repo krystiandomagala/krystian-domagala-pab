@@ -7,12 +7,12 @@ export class Note{
     createDate: string;
     tags: Tag[];
     id: number;
-    constructor(title: string, content: string, tags: Tag[])
+    constructor(title: string, content: string)
     {
         this.title = title;
         this.content = content;
         this.createDate = JSON.parse(JSON.stringify(new Date()));
-        this.tags = tags;
+        //this.tags = tags;
         this.id = Date.now();
         console.log("Note created");
     }
