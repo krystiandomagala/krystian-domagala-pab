@@ -1,10 +1,12 @@
 import express from 'express'
 import {Request, Response} from 'express'
+import { nextTick } from 'process'
 import { json } from 'stream/consumers'
-import { createLogicalNot } from 'typescript'
+import { Login } from './login'
 import {Note} from './note'
 import {Tag} from './tag'
-import {Login} from './login'
+
+require('dotenv').config();
 
 const app = express()
 
@@ -13,141 +15,119 @@ const notes: Array<Note> = new Array();
 app.use(express.json())
 
 app.get('/notes', function (req: Request, res: Response) {
-  res.send(notes)
+  let note: Note =  new Note();
+  //res.status(200).send(note.ReadAllFileToJSON())
+  res.status(200).send(note.GetAllNote())
+
 })
 
 app.get('/note/:id', function (req: Request, res: Response) {
   let id  = req.params.id;
-  let note = notes.filter(x =>x.id == +id)
-
-  if(notes.findIndex(x =>x.id == +id) == -1)
+  let note:Note=new Note()
+  if(note.IsInDatabase(+id) == false)
+  {
     res.status(404).send("Note doesn`t exist!")
+  }
   else
-    res.status(200).send(note);
+  {
+    res.status(200).send(note.GetNote(+id));
+  }
 })
 
 app.put('/note/:id', function (req: Request, res: Response) {
   let id  = req.params.id;
   let note = notes.filter(x =>x.id == +id)
   if(notes.findIndex(x =>x.id == +id) == -1)
+  {
     res.status(404).send("Note doesn`t exist!")
+  }
   else
   {
-    if(req.body.title)
+    if(req.body.title){
       notes[notes.findIndex(x =>x.id == +id)].title = req.body.title
-    if(req.body.content)
+    }
+    if(req.body.content){
       notes[notes.findIndex(x =>x.id == +id)].content = req.body.content
-
-      res.status(204).send("Note updated.")
+    }
+    res.status(204).send("Note updated.")
   }
 })
 
 app.delete('/note/:id', function (req: Request, res: Response) {
   let id  = req.params.id;
   
-  if(notes.findIndex(x =>x.id == +id) == -1)
+  let note:Note=new Note()
+  if(note.IsInDatabase(+id) == false)
+  {
     res.status(404).send("Wrong Id!")
+  }
   else
   {
-    notes.splice(notes.findIndex(x =>x.id == +id), 1)
-    res.status(204).send("Note deleted.")
+    note.DeleteNote(+id)
+    res.status(200).send("Note deleted!");
   }
 })
 
 app.post('/note', function (req: Request, res: Response) {
   
   if(req.body.title === "" || req.body.content === "")
-    res.status(400).send("Title and Content can not be empty!")
+  {
+    res.status(400).send("Title and Content cannot be empty!")
+  }
   else if(!req.body.title || !req.body.content)
+  {
     res.status(400).send("Wrong arguments!")
+  }
   else
   {
     console.log(req.body) 
 
-    let note: Note = new Note(req.body.title, req.body.content);
-    notes.push(note);
+    let tagsFromPost: Array<Tag> = new Array();
+    tagsFromPost = req.body.tags
+    let tagIdsToNote: Array<number> = new Array()
+    tagsFromPost.forEach(element => {
+      let tag = new Tag(element.name)
+      //AddTag zwraca nam id podanego taga
+      tagIdsToNote.push(tag.AddTag(tag))
+    });
+    
+    let note: Note = new Note(req.body.title, req.body.content, tagIdsToNote);
+    note.AddNote(note)
+    console.log("x")
     res.status(201).send(note.id.toString());
   }
   
 })
 
-/*---------------------------------Tagi -----------------------------------*/
+/* Login ------------------------------------------*/
 
-const tags: Array<Tag> = new Array();
 
-app.get('/tags', function (req: Request, res: Response){
-  res.send(tags)
-})
+const jwt = require('jsonwebtoken');
 
-app.get('/tag/:id', function (req: Request, res: Response) {
-  let id  = req.params.id;
-  let tag = tags.filter(x =>x.id == +id)
-  if(tags.findIndex(x =>x.id == +id) == -1)
-    res.status(404).send("Tag doesn`t exist!")
-  else
-    res.status(200).send(tag);
-})
+app.use(express.json());
 
-app.put('/tag/:id', function (req: Request, res: Response) {
-  let id  = req.params.id;
-  let tag = tags.filter(x =>x.id == +id)
-  if(tags.findIndex(x =>x.id == +id) == -1)
-    res.status(404).send("Tag doesn`t exist!")
-  else
-  {
-    if(req.body.name)
-      tags[tags.findIndex(x =>x.id == +id)].name = req.body.name
-
-    res.status(204).send("Note updated.")
-  }
-})
-
-app.delete('/tag/:id', function (req: Request, res: Response) {
-  let id  = req.params.id;
+app.post('/login', authenticateToken,function (req: Request, res: Response) {
+  //let user: Login = new Login(req.body.login, req.body.password)
   
-  if(tags.findIndex(x =>x.id == +id) == -1)
-    res.status(404).send("Wrong Id!")
-  else
-    tags.splice(tags.findIndex(x =>x.id == +id), 1)
-    res.status(204).send("Tag deleted.")
+  const user = { login: req.body.login, password: req.body.password}
+
+  const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET)
+
+  //const payload = jwt.verify(token, secret)
 })
 
-app.post('/tag', function (req: Request, res: Response) {
-  
-  if(req.body.name === "")
-    res.status(400).send("Tag cannot be empty!")
-  else if(!req.body.name)
-    res.status(400).send("Wrong arguments!")
-  else
-  {
-    console.log(req.body) 
+function authenticateToken(req,res,next){
+  const authHeader = req.headers['authorization']
+  const authToken = authHeader && authHeader.split(' ')[1]
+  if(authToken == null) return res.sendStatus(401)
 
-    let tag: Tag = new Tag(req.body.name.toLowerCase());
-    tags.push(tag);
-    res.status(201).send(tag.id);
-  }
-  
-})
-
-/*---------------------Login-----------------------------*/
-
-import {jwt} from 'jsonwebtoken'
-
-const logins: Array<Login> = new Array();
-
-app.post('/login', function (req: Request, res: Response) {
-
-    let secret = process.env.JWT_SECRET_KEY;
-
-    const payload = jwt.verify(token, secret)
-    const token = jwt.sign(payload, secret)
-
-    let login: Login = new Login(req.body.login, req.body.password);
-    logins.push(login);
-    
-    res.status(200).send(login.login);  
-})
-
+  jwt.verify(authToken, process.env.ACCESS_TOKEN_SECRET, (err,user) => {
+    if(err) return res.sendStatus(403)
+    req.user = user
+    next()
+  })
+}
 
 app.listen(3000)
+
 
