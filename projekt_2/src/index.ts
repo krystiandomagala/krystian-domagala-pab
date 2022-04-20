@@ -1,36 +1,34 @@
-require('dotenv').config();
-
 import express from 'express'
 import {Request, Response} from 'express'
-import { access } from 'fs'
-import { nextTick } from 'process'
-import { json } from 'stream/consumers'
-import { Login } from './login'
 import {Note} from './note'
 import {Tag} from './tag'
+import {User} from './user'
 
 const app = express()
-const jwt = require('jsonwebtoken');
-app.use(express.json());
-
 
 const notes: Array<Note> = new Array();
+
 app.use(express.json())
 
 app.get('/notes', function (req: Request, res: Response) {
+
   let note: Note =  new Note();
-  //res.status(200).send(note.ReadAllFileToJSON())
+  res.status(200).send(note.ReadAllFileToJSON())
   res.status(200).send(note.GetAllNote())
 
 })
 
 app.get('/note/:id', function (req: Request, res: Response) {
   let id  = req.params.id;
-  let note:Note=new Note()
+  let note:Note = new Note()
   if(note.IsInDatabase(+id) == false)
+  {
     res.status(404).send("Note doesn`t exist!")
+  }
   else
+  {
     res.status(200).send(note.GetNote(+id));
+  }
 })
 
 app.put('/note/:id', function (req: Request, res: Response) {
@@ -54,7 +52,9 @@ app.delete('/note/:id', function (req: Request, res: Response) {
   
   let note:Note=new Note()
   if(note.IsInDatabase(+id) == false)
+  {
     res.status(404).send("Wrong Id!")
+  }
   else
   {
     note.DeleteNote(+id)
@@ -65,9 +65,13 @@ app.delete('/note/:id', function (req: Request, res: Response) {
 app.post('/note', function (req: Request, res: Response) {
   
   if(req.body.title === "" || req.body.content === "")
-    res.status(400).send("Title and Content cannot be empty!")
+  {
+    res.status(400).send("Title and Content can not be empty!")
+  }
   else if(!req.body.title || !req.body.content)
+  {
     res.status(400).send("Wrong arguments!")
+  }
   else
   {
     console.log(req.body) 
@@ -89,58 +93,53 @@ app.post('/note', function (req: Request, res: Response) {
   
 })
 
-/* Login ------------------------------------------*/
-
-const posts = [
-  { 
-    login: "user1", 
-    password: "password1"
-  },
-  { 
-    login: "user2", 
-    password: "password2"
-  },
-  { 
-    login: "user3", 
-    password: "password3"
+app.post('/login', function (req: Request, res: Response)
+{
+  let user: User = new User(req.body.login, req.body.password)
+  try
+  {
+    res.status(201).send(user.LoginUser(user))
   }
-]
+  catch(exception)
+  {
+    res.status(401).send(exception)
+  }
 
-app.get('/posts', authenticateToken, (req: any, res: any) => {
-  //res.json(posts)
-  res.json(posts.filter(post => post.login === req.user.userLogin));
+
 })
 
-/* username = login / name = userLogin */
-
-app.post('/login', (req,res) => {
-  
-  const login = req.body.login
-  const password = req.body.password
-  const user = { 
-    userLogin: login
-  };
-
-  const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET)
-  if(req.body.userLogin === "" || req.body.userPassword === "")
-    res.status(400).send("Login and password cannot be empty!")
-  else if(!req.body.userLogin || !req.body.userPassword)
-    res.status(400).send("Wrong arguments!")
+app.post('/register', function (req: Request, res: Response)
+{
+  let user: User = new User(req.body.login, req.body.password)
+  if(user.CheckIfExists(user.login)==false)
+  {
+    res.status(201).send(`User Created. Id: ${user.AddNewUser(user).toString()}`);
+  }
   else
-    res.status(200).json(accessToken)
+  {
+    res.status(400).send("User already exists!")
+  }
 })
 
-function authenticateToken(req: any, res: any,next: any){
-  const authHeader = req.headers['authorization']
-  const token = authHeader && authHeader.split(' ')[1]
-  if(token == null) return res.sendStatus(401)
+//notatki
 
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET,(err: any, user: any)=>{
-    if(err) return res.sendStatus(403)
-    req.user = user
-    next()
-  })
-}
+app.get('/tags', function (req: Request, res: Response) {
+  let tag: Tag =  new Tag();
+  res.status(200).send(tag.GetAllTag())
+})
+
+app.get('/tag/:id', function (req: Request, res: Response) {
+  let id  = req.params.id;
+  let tag:Tag = new Tag()
+  if(tag.IsInDatabase(+id) == false)
+  {
+    res.status(404).send("Tag doesn`t exist!")
+  }
+  else
+  {
+    res.status(200).send(tag.GetTag(+id));
+  }
+})
 
 app.listen(3000)
 

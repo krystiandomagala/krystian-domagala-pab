@@ -2,15 +2,15 @@ import internal from "stream";
 import fs, { write } from 'fs';
 import { json } from "stream/consumers";
 import { runInThisContext } from "vm";
+import { NoteViewModel } from "./noteViewModel";
 
 export class Tag{
     id: number;
     name: string;
-    
-    
+
     constructor(name: string ="", id: number = 0)
     {
-        this.name = name;
+        this.name = name.toLowerCase();
         this.id = id;
         this.id = Date.now()
     }
@@ -51,7 +51,24 @@ export class Tag{
         let tags: Tag[] = JSON.parse(rawdata.toString())
         return tags;
     }
-    
 
+    public GetAllTag()
+    {
+        let tags = this.ReadAllFileToJSON()
+        return tags;
+    }
 
+    public IsInDatabase(id:number):boolean
+    {
+        let tags = this.ReadAllFileToJSON()
+        const elemFound = tags.some(el => el.id === id);
+        return elemFound
+    }
+
+    public GetTag(id:number)
+    {
+        let tags = this.ReadAllFileToJSON()
+        const TagsElementId = tags.findIndex(el => el.id === id);
+        return  TagsElementId;
+    }
   }
