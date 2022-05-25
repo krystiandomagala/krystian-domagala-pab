@@ -1,5 +1,6 @@
 import express from 'express'  
-const mongoose = require('mongoose');
+import { ChangeStreamDocument } from "mongodb";
+import mongoose from "mongoose";
 const bodyParser = require('body-parser');
 const app = express()  
 
@@ -12,7 +13,14 @@ app.use('/restaurant', restaurantRoute)
 
 //DATABASE CONNECTION
 
-require('dotenv').config()
-mongoose.connect('process.env.DATABASE_URL', ()=>console.log("Database connected"));
+const connString = 'mongodb+srv://admin:admin@db.6c6zn.mongodb.net/?retryWrites=true&w=majority'
+
+export async function dbmain() {
+    console.log('Connecting to mongo');
+    const db = await mongoose.connect(connString)
+    console.log('Mongo Connected!')
+}
+
+dbmain()
 
 app.listen(3000, () => console.log("Server started"))  
