@@ -60,6 +60,21 @@ router.delete("/:id", async (req, res) => {
       res.status(400).json({ message: error });
     }
   });
+
+//Usuwanie wszystkich dan
+
+router.delete("/", async (req, res) => {
+  try {
+    const dishes = await Dish.remove();
+
+    if (!dishes) throw Error("No dish found!");
+    res.status(200).json({ success: true });
+
+    console.log(`All dishes deleted from database!`);
+  } catch (error) {
+    res.status(400).json({ message: error });
+  }
+});
   
 // Update dania po ID
 

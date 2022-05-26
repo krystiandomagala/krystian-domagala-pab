@@ -8,8 +8,9 @@ const dishSchema = mongoose.Schema({
   cena: Number,
   kategoria: {
     type:String,
-    enum: ["przystawka","danieGlowne","zupa","deser","napoj"]
+    enum: ["pizza","makaron","zupa","deser","napoj","salatka"]
   }
 });
 
-module.exports = mongoose.model('Dish', dishSchema)
+const Dish = mongoose.model('Dish', dishSchema)
+module.exports = Dish

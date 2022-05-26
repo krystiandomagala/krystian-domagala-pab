@@ -5,10 +5,10 @@ const orderSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Employee",
   },
-  pozycje: {
+  pozycje: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Dish",
-  },
+    ref: "Dish"
+  }],
   statusZamowienia: {
     type: String,
     enum: ["zlozone","wRealizacji","zrealizowane","rachunek"],

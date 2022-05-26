@@ -3,7 +3,14 @@ const mongoose = require("mongoose");
 const employeeSchema = mongoose.Schema({
   imie: String,
   nazwisko: String,
+  stanowisko: {
+    type: String,
+    enum: ["kucharz","kelner"],
+    required: true
+  }
 });
 
-module.exports = mongoose.model('Employee', employeeSchema)
+
+const Employee = mongoose.model('Employee', employeeSchema)
+module.exports = Employee
 

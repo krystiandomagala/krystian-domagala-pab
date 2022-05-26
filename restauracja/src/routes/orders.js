@@ -2,12 +2,16 @@ const express = require("express");
 const router = express.Router();
 
 const Order = require("../models/Order");
+const { default: mongoose } = require("mongoose");
 
 //Wyswietlanie listy wszystkich zamowien
 
 router.get("/", async (req, res) => {
   try {
-    const orders = await Order.find();
+    const orders = await Order.find()
+    .populate("pracownik")
+    .populate("pozycje")
+    .populate("stolik");
     res.json(orders);
   } catch (error) {
     res.status(400).json({ message: error });
@@ -33,10 +37,11 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", async (req, res) => {
   const newOrder = new Order({
-    pracownik: req.body.pracownik,
+    pracownik: new mongoose.Types.ObjectId(req.body.pracownik),
     pozycje: req.body.pozycje,
     statusZamowienia: req.body.statusZamowienia,
-    stolik: req.body.stolik,
+    stolik: new mongoose.Types.ObjectId(req.body.stolik),
+    kwota: req.body.kwota
   });
   const saveOrder = await newOrder.save();
 
@@ -57,6 +62,21 @@ router.delete("/:id", async (req, res) => {
     res.status(200).json({ success: true });
 
     console.log(`Order id:${req.params.id} deleted from database!`);
+  } catch (error) {
+    res.status(400).json({ message: error });
+  }
+});
+
+//Usuwanie wszystkich zamowien
+
+router.delete("/", async (req, res) => {
+  try {
+    const orders = await Order.remove();
+
+    if (!orders) throw Error("No order found!");
+    res.status(200).json({ success: true });
+
+    console.log(`All orders deleted from database!`);
   } catch (error) {
     res.status(400).json({ message: error });
   }

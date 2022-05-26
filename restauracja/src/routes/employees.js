@@ -35,7 +35,8 @@ router.get("/:id", async (req, res) => {
 router.post("/", async (req, res) => {
   const newEmployee = new Employee({
     imie: req.body.imie,
-    nazwisko: req.body.nazwisko
+    nazwisko: req.body.nazwisko,
+    stanowisko: req.body.stanowisko
   });
   const saveEmployee = await newEmployee.save();
 
@@ -56,6 +57,21 @@ router.delete("/:id", async (req, res) => {
       res.status(200).json({ success: true });
   
       console.log(`Employee id:${req.params.id} deleted from database!`);
+    } catch (error) {
+      res.status(400).json({ message: error });
+    }
+  });
+
+//Usuwanie wszystkich pracowników
+
+  router.delete("/", async (req, res) => {
+    try {
+      const employees = await Employee.remove();
+  
+      if (!employees) throw Error("No employee found!");
+      res.status(200).json({ success: true });
+  
+      console.log(`All employees deleted from database!`);
     } catch (error) {
       res.status(400).json({ message: error });
     }

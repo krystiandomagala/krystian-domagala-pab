@@ -62,6 +62,21 @@ router.delete("/:id", async (req, res) => {
     }
   });
   
+//Usuwanie wszystkich produktów
+
+router.delete("/", async (req, res) => {
+  try {
+    const products = await Product.remove();
+
+    if (!products) throw Error("No product found!");
+    res.status(200).json({ success: true });
+
+    console.log(`All products deleted from database!`);
+  } catch (error) {
+    res.status(400).json({ message: error });
+  }
+});
+
 // Update produktu po ID
 
 router.put("/:id", async (req, res) => {

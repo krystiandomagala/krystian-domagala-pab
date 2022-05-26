@@ -62,6 +62,21 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+//Usuwanie wszystkich stolików
+
+router.delete("/", async (req, res) => {
+  try {
+    const table = await Table.remove();
+
+    if (!table) throw Error("No table found!");
+    res.status(200).json({ success: true });
+
+    console.log(`All tables deleted from database!`);
+  } catch (error) {
+    res.status(400).json({ message: error });
+  }
+});
+
 // Update stolika po ID
 
 router.put("/:id", async (req, res) => {
