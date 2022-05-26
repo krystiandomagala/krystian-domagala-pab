@@ -5,6 +5,5 @@ const employeeSchema = mongoose.Schema({
   nazwisko: String,
 });
 
-export const mongooseEmployee = mongoose.model("employee", employeeSchema);
 module.exports = mongoose.model('Employee', employeeSchema)
 

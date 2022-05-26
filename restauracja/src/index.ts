@@ -1,5 +1,4 @@
 import express from 'express'  
-import { ChangeStreamDocument } from "mongodb";
 import mongoose from "mongoose";
 const bodyParser = require('body-parser');
 const app = express()  
@@ -10,6 +9,24 @@ app.use(bodyParser.json())
 
 const restaurantRoute = require('./routes/restaurant');
 app.use('/restaurant', restaurantRoute)
+
+const tableRoute = require('./routes/tables');
+app.use('/tables', tableRoute)
+
+const employeeRoute = require('./routes/employees')
+app.use('/employees', employeeRoute)
+
+const bookingRoute = require('./routes/bookings')
+app.use('/bookings', bookingRoute)
+
+const productRoute = require('./routes/products')
+app.use('/products', productRoute)
+
+const dishRoute = require('./routes/dishes')
+app.use('/dishes', dishRoute)
+
+const orderRoute = require('./routes/orders')
+app.use('/orders', orderRoute)
 
 //DATABASE CONNECTION
 

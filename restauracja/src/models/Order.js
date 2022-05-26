@@ -1,19 +1,4 @@
-import mongooseTable from "./Table.js";
-import mongooseEmployee from "./Employee.js";
-import mongooseDish from "./Dish.js";
 const mongoose = require("mongoose");
-const Table = require("./Table");
-const Employee = require("./Employee");
-const Dish = require("./Dish");
-
-const OrderStatus = {
-  zlozone: 1,
-  wRealizacji: 2,
-  zrealizowane: 3,
-  rachunek: 4,
-};
-
-Object.freeze(OrderStatus);
 
 const orderSchema = mongoose.Schema({
   pracownik: {
@@ -25,7 +10,8 @@ const orderSchema = mongoose.Schema({
     ref: "Dish",
   },
   statusZamowienia: {
-    type: OrderStatus,
+    type: String,
+    enum: ["zlozone","wRealizacji","zrealizowane","rachunek"],
     required: true,
   },
   stolik: {
@@ -36,13 +22,4 @@ const orderSchema = mongoose.Schema({
   kwota: Number,
 });
 
-export const tableOrder = orderSchema.discriminator(
-  "tableOrder",
-  mongooseTable
-);
-export const employeeOrder = orderSchema.discriminator(
-  "employeeOrder",
-  mongooseEmployee
-);
-export const dishOrder = orderSchema.discriminator("dishOrder", mongooseDish);
 module.exports = mongoose.model('Order', orderSchema)

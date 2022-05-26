@@ -17,8 +17,9 @@ const productSchema = mongoose.Schema({
   cena: Number,
   ilosc: Number,
   jednostkaMiary: {
-    type: JednostkaMiary,
-    default: kg,
+    type: String,
+    enum: ['g','kg','ml','l'],
+    default: "kg",
   },
 });
 
