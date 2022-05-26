@@ -33,6 +33,54 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+//Raport zamowien per stolik (jako parametr podane id stolika)
+
+router.get("/table-raport/:id", async (req, res) => {
+  try {
+    const orders = await Order.find({stolik: req.params.id});
+
+    if (!orders) throw Error("No order found to this table!");
+    res.status(200).json(orders);
+
+    console.log(`Orders returned from database!`);
+  } catch (error) {
+    res.status(400).json({ message: error });
+  }
+});
+
+//Raport zamowien per kelner (jako parametr podane id pracownika)
+
+router.get("/waiter-raport/:id", async (req, res) => {
+  try {
+    const orders = await Order.find({pracownik: req.params.id});
+
+    if (!orders) throw Error("No order found to this waiter!");
+    res.status(200).json(orders);
+
+    console.log(`Order id:${req.params.id} returned from database!`);
+  } catch (error) {
+    res.status(400).json({ message: error });
+  }
+});
+
+//Raport zamowien w okresie czasu (start:)
+
+router.post("/time-period-raport", async (req, res) => {
+  try {
+    const orders = await Order.find(/*{$gte: ISODate(req.body.start), $lt: ISODate(req.body.koniec)}*/);
+    const ordersTimestamp = orders._id.getTimestamp();
+
+    if (!orders) throw Error("No order found in this time period!");
+    res.status(200).json(ordersTimestamp);
+
+    console.log(`Orders returned from database!`);
+  } catch (error) {
+    res.status(400).json({ message: error });
+  }
+});
+
+
+
 //Dodawanie zamowienia do bazy danych
 
 router.post("/", async (req, res) => {

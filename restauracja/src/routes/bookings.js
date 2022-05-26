@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const Booking = require("../models/Booking");
+const Table = require("../models/Table");
 const { default: mongoose } = require("mongoose");
 
 //Wyswietlenie listy wszystkich rezerwacji
@@ -30,22 +31,15 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-//Dodawanie rezerwacji do bazy danych (w polu stolik podajemy jedynie odwolanie do obiektu tj. jego ID)
+//Wyszukiwanie stolikow wolnych danego dnia
 
-router.post("/", async (req, res) => {
-  const newBooking = new Booking({
-    stolik: new mongoose.Types.ObjectId(req.body.stolik),
-    start: req.body.start,
-    koniec: req.body.koniec,
-    klient: req.body.klient,
-  });
-  const saveBooking = await newBooking.save();
-
-  try {
-    res.status(200).json(saveBooking);
-  } catch (error) {
-    res.status(400).json({ message: error });
-  }
+router.post("/free", async(req,res) =>{
+  const table = await Table.find({status: "wolny",iloscOsob: req.body.iloscOsob});
+  const booking = await Booking.find({start: req.body.start, _id: table._id});
+  if(booking.length == 0)
+    res.json(table)
+  else
+    res.send('There is free table!')
 });
 
 //Usuwanie rezerwacji po ID
