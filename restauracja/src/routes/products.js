@@ -3,11 +3,16 @@ const router = express.Router();
 
 const Product = require("../models/Product");
 
-//Wyswietlenie listy wszystkich produktow
+//Wyswietlenie listy wszystkich produktow z sortowaniem i paginacją "?page=1&limit=2" - paginacja "?page=1&limit=2&sort=1" - paginacja i sortowanie
 
 router.get("/", async (req, res) => {
+
+    const page = req.query.page
+    const limit = req.query.limit
+    const sort = req.query.sort
+
     try {
-      const products = await Product.find();
+      const products = await Product.find().skip(page).limit(limit).sort({ "nazwa": sort });
       res.json(products);
     } catch (error) {
       res.status(400).json({ message: error });
@@ -46,6 +51,24 @@ router.post("/", async (req, res) => {
       res.status(400).json({ message: error });
     }
   });
+
+//Zglaszanie zapotrzebowania na produkty
+
+router.post("/to-buy", async (req, res) => {
+  const newProduct = new Product({
+    nazwa: req.body.nazwa,
+    cena: req.body.cena,
+    ilosc: req.body.ilosc,
+    jednostkaMiary: req.body.jednostkaMiary
+  });
+  const saveProduct = await newProduct.save();
+
+  try {
+    res.status(200).json(saveProduct);
+  } catch (error) {
+    res.status(400).json({ message: error });
+  }
+});
 
 //Usuwanie produktu po ID
 

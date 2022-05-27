@@ -9,9 +9,9 @@ const { default: mongoose } = require("mongoose");
 router.get("/", async (req, res) => {
   try {
     const orders = await Order.find()
-    .populate("pracownik")
-    .populate("pozycje")
-    .populate("stolik");
+      .populate("pracownik")
+      .populate("pozycje")
+      .populate("stolik");
     res.json(orders);
   } catch (error) {
     res.status(400).json({ message: error });
@@ -37,7 +37,7 @@ router.get("/:id", async (req, res) => {
 
 router.get("/table-raport/:id", async (req, res) => {
   try {
-    const orders = await Order.find({stolik: req.params.id});
+    const orders = await Order.find({ stolik: req.params.id });
 
     if (!orders) throw Error("No order found to this table!");
     res.status(200).json(orders);
@@ -52,7 +52,7 @@ router.get("/table-raport/:id", async (req, res) => {
 
 router.get("/waiter-raport/:id", async (req, res) => {
   try {
-    const orders = await Order.find({pracownik: req.params.id});
+    const orders = await Order.find({ pracownik: req.params.id });
 
     if (!orders) throw Error("No order found to this waiter!");
     res.status(200).json(orders);
@@ -63,36 +63,19 @@ router.get("/waiter-raport/:id", async (req, res) => {
   }
 });
 
-//Raport zamowien w okresie czasu (start:)
-
-router.post("/time-period-raport", async (req, res) => {
-  try {
-    const orders = await Order.find(/*{$gte: ISODate(req.body.start), $lt: ISODate(req.body.koniec)}*/);
-    const ordersTimestamp = orders._id.getTimestamp();
-
-    if (!orders) throw Error("No order found in this time period!");
-    res.status(200).json(ordersTimestamp);
-
-    console.log(`Orders returned from database!`);
-  } catch (error) {
-    res.status(400).json({ message: error });
-  }
-});
-
-
-
 //Dodawanie zamowienia do bazy danych
 
 router.post("/", async (req, res) => {
+
   const newOrder = new Order({
     pracownik: new mongoose.Types.ObjectId(req.body.pracownik),
     pozycje: req.body.pozycje,
     statusZamowienia: req.body.statusZamowienia,
     stolik: new mongoose.Types.ObjectId(req.body.stolik),
-    kwota: req.body.kwota
+    kwota: req.body.kwota,
   });
-  const saveOrder = await newOrder.save();
 
+  const saveOrder = await newOrder.save();
   try {
     res.status(200).json(saveOrder);
   } catch (error) {
