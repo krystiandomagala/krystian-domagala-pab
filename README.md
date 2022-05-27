@@ -215,6 +215,7 @@ Projekt REST API do zarządzania restauracją. Do projektu wykorzystałem *Expre
  
  - Zwrócenie listy rezerwacji z bazy danych `GET http://localhost:3000/bookings`.
  - Zwrócenie konkretnej rezerwacji z bazy danych `GET http://localhost:3000/bookings/:id`.
+ - Wyszukanie stolików wolnych danego dnia `POST http://localhost:3000/bookings/free`.
  - Edycja danych rezerwacji  `PUT http://localhost:3000/bookings/:id`.
  - Usunięcie konkretnej rezerwacji `DELETE http://localhost:3000/bookings/:id`. 
  - Usunięcie wszystkich rezerwacji z bazy danych `DELETE http://localhost:3000/bookings`.
