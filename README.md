@@ -194,5 +194,32 @@ Projekt REST API do zarządzania restauracją. Do projektu wykorzystałem *Expre
 
  W miejsce `:id` wstawiamy identyfikator dania zwrócony z `GET`.
 
+<br/>
+
+  ### Rezerwacje
+
+- Dodanie rezerwacji do bazy danych `POST http://localhost:3000/bookings`.
+<a/>
+
+**Przykładowe dane:** 
+```json
+    {
+        "stolik": "628e499858f6cab03380407d",
+        "start": "2012-04-23T00:00:00.000Z",
+        "koniec": "2012-04-23T00:00:00.000Z",
+        "klient": "Jan Kowalski"
+    }
+ ```
+ 
+ <br/>
+ 
+ - Zwrócenie listy rezerwacji z bazy danych `GET http://localhost:3000/bookings`.
+ - Zwrócenie konkretnej rezerwacji z bazy danych `GET http://localhost:3000/bookings/:id`.
+ - Edycja danych rezerwacji  `PUT http://localhost:3000/bookings/:id`.
+ - Usunięcie konkretnej rezerwacji `DELETE http://localhost:3000/bookings/:id`. 
+ - Usunięcie wszystkich rezerwacji z bazy danych `DELETE http://localhost:3000/bookings`.
+
+ W miejsce `:id` wstawiamy identyfikator rezerwacji zwrócony z `GET`.
+
 
 
