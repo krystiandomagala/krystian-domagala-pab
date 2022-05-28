@@ -5,6 +5,7 @@ const JednostkaMiary = {
   kg: 2,
   ml: 3,
   l: 4,
+  szt: 5
 };
 
 Object.freeze(JednostkaMiary);
@@ -18,7 +19,7 @@ const productSchema = mongoose.Schema({
   ilosc: Number,
   jednostkaMiary: {
     type: String,
-    enum: ['g','kg','ml','l'],
+    enum: ['g','kg','ml','l','szt'],
     default: "kg",
   },
 });

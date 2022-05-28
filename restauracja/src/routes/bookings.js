@@ -31,6 +31,24 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+//Dodanie rezerwacji do bazy danych
+
+router.post("/", async (req, res) => {
+  const newBooking = new Booking({
+    stolik: new mongoose.Types.ObjectId(req.body.stolik),
+    start: req.body.start,
+    koniec: req.body.koniec,
+    klient: req.body.klient
+  });
+  const saveBooking = await newBooking.save();
+
+  try {
+    res.status(200).json(saveBooking);
+  } catch (error) {
+    res.status(400).json({ message: error });
+  }
+});
+
 //Wyszukiwanie stolikow wolnych danego dnia
 
 router.post("/free", async(req,res) =>{

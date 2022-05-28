@@ -12,7 +12,7 @@ const orderSchema = mongoose.Schema({
   statusZamowienia: {
     type: String,
     enum: ["zlozone","wRealizacji","zrealizowane","rachunek"],
-    required: true,
+    required: true
   },
   stolik: {
     type: mongoose.Schema.Types.ObjectId,
