@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const orderSchema = mongoose.Schema({
+const orderSchema = new mongoose.Schema({
   pracownik: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Employee",
@@ -11,7 +11,7 @@ const orderSchema = mongoose.Schema({
   }],
   statusZamowienia: {
     type: String,
-    enum: ["zlozone","wRealizacji","zrealizowane","rachunek"],
+    enum: ["zlozone", "wRealizacji", "zrealizowane", "rachunek"],
     required: true
   },
   stolik: {

@@ -1,11 +1,11 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const employeeSchema = mongoose.Schema({
+const employeeSchema = new mongoose.Schema({
   imie: String,
   nazwisko: String,
   stanowisko: {
     type: String,
-    enum: ["kucharz","kelner"],
+    enum: ["kucharz", "kelner"],
     required: true
   }
 });

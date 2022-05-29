@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const JednostkaMiary = {
   g: 1,
@@ -10,7 +10,7 @@ const JednostkaMiary = {
 
 Object.freeze(JednostkaMiary);
 
-const productSchema = mongoose.Schema({
+const productSchema = new mongoose.Schema({
   nazwa: {
     type: String,
     required: true,
@@ -19,7 +19,7 @@ const productSchema = mongoose.Schema({
   ilosc: Number,
   jednostkaMiary: {
     type: String,
-    enum: ['g','kg','ml','l','szt'],
+    enum: ['g', 'kg', 'ml', 'l', 'szt'],
     default: "kg",
   },
 });

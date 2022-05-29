@@ -1,12 +1,11 @@
 const express = require("express");
-const { resourceUsage } = require("process");
 const router = express.Router();
 
 const Employee = require("../models/Employee");
 
 //Wyswietlenie listy pracownikow
 
-router.get("/", async (req, res) => {
+router.get("/", async (req:any, res:any) => {
   try {
     const employees = await Employee.find();
     res.json(employees);
@@ -17,7 +16,7 @@ router.get("/", async (req, res) => {
 
 //Wyswietlenie konkretnego pracownika
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req:any, res:any) => {
     try {
       const employees = await Employee.findById(req.params.id);
   
@@ -32,7 +31,7 @@ router.get("/:id", async (req, res) => {
 
 //Dodawanie pracownika do bazy danych
 
-router.post("/", async (req, res) => {
+router.post("/", async (req:any, res:any) => {
   const newEmployee = new Employee({
     imie: req.body.imie,
     nazwisko: req.body.nazwisko,
@@ -49,7 +48,7 @@ router.post("/", async (req, res) => {
 
 //Usuwanie pracownika po ID
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", async (req:any, res:any) => {
     try {
       const employees = await Employee.findByIdAndDelete(req.params.id);
   
@@ -64,7 +63,7 @@ router.delete("/:id", async (req, res) => {
 
 //Usuwanie wszystkich pracowników
 
-  router.delete("/", async (req, res) => {
+  router.delete("/", async (req:any, res:any) => {
     try {
       const employees = await Employee.remove();
   
@@ -79,7 +78,7 @@ router.delete("/:id", async (req, res) => {
 
 // Update pracownika po ID
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", async (req:any, res:any) => {
     try {
       const employees = await Employee.findByIdAndUpdate(
         req.params.id,

@@ -1,12 +1,11 @@
-const express = require("express");
-const { resourceUsage } = require("process");
+import express from "express";
 const router = express.Router();
 
 const Restaurant = require("../models/Restaurant");
 
 // Wyświetlenie restauracji
 
-router.get("/", async (req, res) => {
+router.get("/", async (req: any, res: any) => {
   try {
     const restaurants = await Restaurant.find();
     res.json(restaurants);
@@ -17,7 +16,7 @@ router.get("/", async (req, res) => {
 
 //Dodawanie restauracji do bazy danych
 
-router.post("/", async (req, res) => {
+router.post("/", async (req: any, res: any) => {
   const restaurant = await Restaurant.find();
   if (restaurant.length != 0) 
   {
@@ -45,7 +44,7 @@ router.post("/", async (req, res) => {
 
 // Usuwanie restauracji po ID
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", async (req: any, res: any) => {
   try {
     const restaurant = await Restaurant.findByIdAndDelete(req.params.id);
 
@@ -60,7 +59,7 @@ router.delete("/:id", async (req, res) => {
 
 // Update restauracji po ID
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", async (req: any, res: any) => {
   try {
     const restaurant = await Restaurant.findByIdAndUpdate(
       req.params.id,

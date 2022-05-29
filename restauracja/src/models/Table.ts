@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const tableSchema = mongoose.Schema({
+const tableSchema = new mongoose.Schema({
   nazwa: {
     type: String,
     required: true,
@@ -11,7 +11,7 @@ const tableSchema = mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['wolny','niedostepny','zajety'],
+    enum: ['wolny', 'niedostepny', 'zajety'],
     default: 'wolny'
   },
 });

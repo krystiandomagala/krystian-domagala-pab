@@ -1,12 +1,13 @@
-const express = require("express");
+import express from "express";
+import mongoose from "mongoose";
+
 const router = express.Router();
 
 const Order = require("../models/Order");
-const { default: mongoose } = require("mongoose");
 
 //Wyswietlanie listy wszystkich zamowien
 
-router.get("/", async (req, res) => {
+router.get("/", async (req:any, res:any) => {
   try {
     const orders = await Order.find()
       .populate("pracownik")
@@ -20,7 +21,7 @@ router.get("/", async (req, res) => {
 
 //Wyswietlenie konkretnego zamowienia
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req:any, res:any) => {
   try {
     const orders = await Order.findById(req.params.id);
 
@@ -35,7 +36,7 @@ router.get("/:id", async (req, res) => {
 
 //Raport zamowien per stolik (jako parametr podane id stolika)
 
-router.get("/table-raport/:id", async (req, res) => {
+router.get("/table-raport/:id", async (req:any, res:any) => {
   try {
     const orders = await Order.find({ stolik: req.params.id });
 
@@ -50,7 +51,7 @@ router.get("/table-raport/:id", async (req, res) => {
 
 //Raport zamowien per kelner (jako parametr podane id pracownika)
 
-router.get("/waiter-raport/:id", async (req, res) => {
+router.get("/waiter-raport/:id", async (req:any, res:any) => {
   try {
     const orders = await Order.find({ pracownik: req.params.id });
 
@@ -65,7 +66,7 @@ router.get("/waiter-raport/:id", async (req, res) => {
 
 //Dodawanie zamowienia do bazy danych
 
-router.post("/", async (req, res) => {
+router.post("/", async (req:any, res:any) => {
 
   const newOrder = new Order({
     pracownik: new mongoose.Types.ObjectId(req.body.pracownik),
@@ -85,11 +86,11 @@ router.post("/", async (req, res) => {
 
 //Usuwanie zamowienia po ID
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", async (req:any, res:any) => {
   try {
     const orders = await Order.findByIdAndDelete(req.params.id);
 
-    if (!order) throw Error("No order found!");
+    if (!orders) throw Error("No order found!");
     res.status(200).json({ success: true });
 
     console.log(`Order id:${req.params.id} deleted from database!`);
@@ -100,7 +101,7 @@ router.delete("/:id", async (req, res) => {
 
 //Usuwanie wszystkich zamowien
 
-router.delete("/", async (req, res) => {
+router.delete("/", async (req:any, res:any) => {
   try {
     const orders = await Order.remove();
 
@@ -115,7 +116,7 @@ router.delete("/", async (req, res) => {
 
 // Update zamowienia po ID
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", async (req:any, res:any) => {
   try {
     const orders = await Order.findByIdAndUpdate(req.params.id, req.body);
 

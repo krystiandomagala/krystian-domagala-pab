@@ -1,12 +1,11 @@
-const express = require("express");
-const { resourceUsage } = require("process");
+import express from "express";
 const router = express.Router();
 
 const Table = require("../models/Table");
 
 //Wyswietlanie listy wszystkich stolikow
 
-router.get("/", async (req, res) => {
+router.get("/", async (req:any, res:any) => {
   try {
     const tables = await Table.find();
     res.json(tables);
@@ -17,7 +16,7 @@ router.get("/", async (req, res) => {
 
 //Wyswietlenie konkretnego stolika
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req:any, res:any) => {
   try {
     const table = await Table.findById(req.params.id);
 
@@ -32,7 +31,7 @@ router.get("/:id", async (req, res) => {
 
 //Dodawanie stolikow do bazy danych
 
-router.post("/", async (req, res) => {
+router.post("/", async (req:any, res:any) => {
   const newTable = new Table({
     nazwa: req.body.nazwa,
     iloscOsob: req.body.iloscOsob,
@@ -49,7 +48,7 @@ router.post("/", async (req, res) => {
 
 //Usuwanie stolika po ID
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", async (req:any, res:any) => {
   try {
     const table = await Table.findByIdAndDelete(req.params.id);
 
@@ -64,7 +63,7 @@ router.delete("/:id", async (req, res) => {
 
 //Usuwanie wszystkich stolików
 
-router.delete("/", async (req, res) => {
+router.delete("/", async (req:any, res:any) => {
   try {
     const table = await Table.remove();
 
@@ -79,7 +78,7 @@ router.delete("/", async (req, res) => {
 
 // Update stolika po ID
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", async (req:any, res:any) => {
     try {
       const table = await Table.findByIdAndUpdate(
         req.params.id,

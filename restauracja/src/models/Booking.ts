@@ -1,5 +1,7 @@
-const mongoose = require("mongoose");
-const bookingSchema = mongoose.Schema({
+import mongoose from "mongoose";
+
+
+const bookingSchema = new mongoose.Schema({
   stolik: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Table',

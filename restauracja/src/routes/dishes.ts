@@ -1,11 +1,11 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
 
 const Dish = require("../models/Dish");
 
 //Wyswietlanie listy wszystkich dań
 
-router.get("/", async (req, res) => {
+router.get("/", async (req:any, res:any) => {
   try {
     const dishes = await Dish.find();
     res.json(dishes);
@@ -16,7 +16,7 @@ router.get("/", async (req, res) => {
 
 //Wyswietlenie konkretnego dania
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req:any, res:any) => {
   try {
     const dishes = await Dish.findById(req.params.id);
 
@@ -31,7 +31,7 @@ router.get("/:id", async (req, res) => {
 
 //Dodawanie dań do bazy danych
 
-router.post("/", async (req, res) => {
+router.post("/", async (req:any, res:any) => {
     const newDish = new Dish({
       nazwa: req.body.nazwa,
       cena: req.body.cena,
@@ -48,7 +48,7 @@ router.post("/", async (req, res) => {
 
 //Usuwanie dania po ID
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", async (req:any, res:any) => {
     try {
       const dishes = await Dish.findByIdAndDelete(req.params.id);
   
@@ -63,7 +63,7 @@ router.delete("/:id", async (req, res) => {
 
 //Usuwanie wszystkich dan
 
-router.delete("/", async (req, res) => {
+router.delete("/", async (req:any, res:any) => {
   try {
     const dishes = await Dish.remove();
 
@@ -78,7 +78,7 @@ router.delete("/", async (req, res) => {
   
 // Update dania po ID
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", async (req:any, res:any) => {
     try {
       const dishes = await Dish.findByIdAndUpdate(
         req.params.id,

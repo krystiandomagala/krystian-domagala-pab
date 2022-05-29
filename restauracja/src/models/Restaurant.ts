@@ -1,6 +1,5 @@
-const mongoose = require("mongoose");
-
-const restaurantSchema = mongoose.Schema({
+import mongoose from "mongoose";
+const restaurantSchema = new mongoose.Schema({
   nazwa: String,
   adres: String,
   telefon: String,

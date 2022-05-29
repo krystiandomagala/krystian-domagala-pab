@@ -1,14 +1,14 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const dishSchema = mongoose.Schema({
+const dishSchema = new mongoose.Schema({
   nazwa: {
     type: String,
     required: true,
   },
   cena: Number,
   kategoria: {
-    type:String,
-    enum: ["pizza","makaron","zupa","deser","napoj","salatka"]
+    type: String,
+    enum: ["pizza", "makaron", "zupa", "deser", "napoj", "salatka"]
   }
 });
 

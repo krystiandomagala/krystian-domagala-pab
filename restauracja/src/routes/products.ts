@@ -1,11 +1,11 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
 
 const Product = require("../models/Product");
 
 //Wyswietlenie listy wszystkich produktow z sortowaniem i paginacją "?page=1&limit=2" - paginacja "?page=1&limit=2&sort=1" - paginacja i sortowanie
 
-router.get("/", async (req, res) => {
+router.get("/", async (req:any, res:any) => {
 
     const page = req.query.page
     const limit = req.query.limit
@@ -21,7 +21,7 @@ router.get("/", async (req, res) => {
 
 //Wyswietlenie konkretnego produktu
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", async (req:any, res:any) => {
   try {
     const products = await Product.findById(req.params.id);
 
@@ -36,7 +36,7 @@ router.get("/:id", async (req, res) => {
 
 //Dodawanie produktów do bazy danych
 
-router.post("/", async (req, res) => {
+router.post("/", async (req:any, res:any) => {
     const newProduct = new Product({
       nazwa: req.body.nazwa,
       cena: req.body.cena,
@@ -54,7 +54,7 @@ router.post("/", async (req, res) => {
 
 //Zglaszanie zapotrzebowania na produkty
 
-router.post("/to-buy", async (req, res) => {
+router.post("/to-buy", async (req:any, res:any) => {
   const newProduct = new Product({
     nazwa: req.body.nazwa,
     cena: req.body.cena,
@@ -72,7 +72,7 @@ router.post("/to-buy", async (req, res) => {
 
 //Usuwanie produktu po ID
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", async (req:any, res:any) => {
     try {
       const products = await Product.findByIdAndDelete(req.params.id);
   
@@ -87,7 +87,7 @@ router.delete("/:id", async (req, res) => {
   
 //Usuwanie wszystkich produktów
 
-router.delete("/", async (req, res) => {
+router.delete("/", async (req:any, res:any) => {
   try {
     const products = await Product.remove();
 
@@ -102,7 +102,7 @@ router.delete("/", async (req, res) => {
 
 // Update produktu po ID
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", async (req:any, res:any) => {
     try {
       const products = await Product.findByIdAndUpdate(
         req.params.id,
