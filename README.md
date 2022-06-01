@@ -12,7 +12,7 @@ Projekt REST API do zarządzania restauracją. Do projektu wykorzystałem *Expre
 **Przykładowe dane:**
 ```json
     {
-        "nazwa": "Restaduracja-update",
+        "nazwa": "Restauracja",
         "adres": "ul. Basztowa 10, Kraków",
         "telefon": "233456789",
         "NIP": "3223456789",
