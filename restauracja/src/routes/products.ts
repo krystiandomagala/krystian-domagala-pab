@@ -12,7 +12,7 @@ router.get("/", async (req:any, res:any) => {
     const sort = req.query.sort
 
     try {
-      const products = await Product.find().skip(page).limit(limit).sort({ "nazwa": sort });
+      const products = await Product.find().skip((page-1)*limit).limit(limit).sort({ "nazwa": sort });
       res.json(products);
     } catch (error) {
       res.status(400).json({ message: error });
